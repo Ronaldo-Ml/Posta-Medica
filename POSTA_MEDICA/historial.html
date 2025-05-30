@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial Médico por Paciente</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="d-flex" id="wrapper">
+        <div class="bg-dark border-end" id="sidebar-wrapper">
+            <div class="sidebar-heading bg-success text-white py-4 text-center fw-bold fs-5">
+                <img src="https://via.placeholder.com/60" alt="Logo" class="img-fluid rounded-circle mb-2 border border-white">
+                Posta Médica
+            </div>
+            <div class="list-group list-group-flush">
+                <a href="index.html" class="list-group-item list-group-item-action bg-dark text-white p-3"><i class="bi bi-house-door-fill me-2"></i> Inicio</a>
+                <a href="registro.html" class="list-group-item list-group-item-action bg-dark text-white p-3"><i class="bi bi-person-plus-fill me-2"></i> Registrar Atención</a>
+                <a href="atenciones.html" class="list-group-item list-group-item-action bg-dark text-white p-3"><i class="bi bi-clipboard-data-fill me-2"></i> Ver Atenciones</a>
+                <a href="pacientes.html" class="list-group-item list-group-item-action bg-dark text-white p-3"><i class="bi bi-people-fill me-2"></i> Gestión de Pacientes</a>
+                <a href="historial.html" class="list-group-item list-group-item-action bg-dark text-white p-3 active"><i class="bi bi-journal-medical me-2"></i> Historial por Paciente</a>
+                <a href="reportes.html" class="list-group-item list-group-item-action bg-dark text-white p-3"><i class="bi bi-graph-up-arrow me-2"></i> Reportes</a>
+                <a href="#" id="logoutBtn" class="list-group-item list-group-item-action bg-dark text-white p-3 text-danger"><i class="bi bi-box-arrow-right me-2"></i> Cerrar Sesión</a>
+            </div>
+        </div>
+        <div id="page-content-wrapper">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+                <div class="container-fluid">
+                    <button class="btn btn-primary" id="sidebarToggle"><i class="bi bi-list"></i> Menú</button>
+                    <h5 class="mb-0 ms-3 text-success">Historial Médico por Paciente</h5>
+                </div>
+            </nav>
+
+            <div class="container-fluid py-4">
+                <div class="card shadow-sm p-4">
+                    <h2 class="card-title text-success mb-4"><i class="bi bi-search me-2"></i> Buscar Historial de Paciente</h2>
+                    <div class="mb-3">
+                        <label for="dniHistorial" class="form-label">DNI del Paciente:</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="dniHistorial" pattern="[0-9]{8}" maxlength="8" placeholder="Ingrese DNI del paciente" required>
+                            <button class="btn btn-primary" type="button" id="btnBuscarHistorial"><i class="bi bi-search me-2"></i> Buscar</button>
+                            <div class="invalid-feedback">
+                                Por favor, ingrese un DNI válido de 8 dígitos.
+                            </div>
+                        </div>
+                    </div>
+                    <div id="pacienteInfo" class="mt-4 p-3 border rounded bg-light" style="display: none;">
+                        <h4 class="text-primary mb-3"><i class="bi bi-person-fill me-2"></i> Datos del Paciente:</h4>
+                        <p><strong>Nombre:</strong> <span id="historialNombre"></span></p>
+                        <p><strong>DNI:</strong> <span id="historialDNI"></span></p>
+                        <p><strong>Edad:</strong> <span id="historialEdad"></span></p>
+                    </div>
+
+                    <div id="historialAtenciones" class="mt-4">
+                        <h4 class="text-success mb-3"><i class="bi bi-clipboard-data-fill me-2"></i> Atenciones Registradas:</h4>
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped">
+                                <thead class="table-success">
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Tipo Atención</th>
+                                        <th>Diagnóstico</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="listaHistorialAtenciones">
+                                    <tr><td colspan="3" class="text-center text-muted">No hay atenciones para este paciente o no se ha realizado una búsqueda.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script >
+document.addEventListener("DOMContentLoaded", function () {
+    let btnBuscarHistorial = document.getElementById("btnBuscarHistorial");
+    let dniHistorial = document.getElementById("dniHistorial");
+    let pacienteInfo = document.getElementById("pacienteInfo");
+    let listaHistorialAtenciones = document.getElementById("listaHistorialAtenciones");
+
+    function buscarHistorial() {
+        let dni = dniHistorial.value.trim();
+
+        if (!/^\d{8}$/.test(dni)) {
+            dniHistorial.classList.add("is-invalid");
+            alert("El DNI debe contener exactamente 8 dígitos numéricos.");
+            return;
+        } else {
+            dniHistorial.classList.remove("is-invalid");
+        }
+
+        let atenciones = JSON.parse(localStorage.getItem("atenciones")) || [];
+
+        // Filtrar las atenciones del paciente
+        let historialPaciente = atenciones.filter(atencion => atencion.dni === dni);
+
+        if (historialPaciente.length === 0) {
+            alert("No hay ninguna atención registrada con este DNI. Verifique e intente nuevamente.");
+            pacienteInfo.style.display = "none";
+            listaHistorialAtenciones.innerHTML = "<tr><td colspan='3' class='text-center text-muted'>No se encontró historial para este paciente.</td></tr>";
+            return;
+        }
+
+        // Mostrar datos del paciente (tomando del primer registro encontrado)
+        document.getElementById("historialNombre").textContent = historialPaciente[0].nombre;
+        document.getElementById("historialDNI").textContent = historialPaciente[0].dni;
+        document.getElementById("historialEdad").textContent = historialPaciente[0].edad;
+        pacienteInfo.style.display = "block";
+
+        // Mostrar el historial de atenciones
+        listaHistorialAtenciones.innerHTML = ""; // Limpiar tabla antes de insertar los datos
+
+        historialPaciente.forEach(atencion => {
+            let fila = document.createElement("tr");
+            fila.innerHTML = `
+                <td>${atencion.fecha}</td>
+                <td>${atencion.tipo}</td>
+                <td>${atencion.diagnostico}</td>
+            `;
+            listaHistorialAtenciones.appendChild(fila);
+        });
+    }
+
+    btnBuscarHistorial.addEventListener("click", buscarHistorial);
+});
+    </script>
+</body>
+</html>

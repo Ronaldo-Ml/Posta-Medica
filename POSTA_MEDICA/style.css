@@ -1,0 +1,451 @@
+/* Variables CSS para una fácil personalización */
+:root {
+    --primary-color: #28a745; /* Verde Bootstrap 'success' */
+    --secondary-color: #007bff; /* Azul Bootstrap 'primary' */
+    --accent-color: #ffc107; /* Amarillo Bootstrap 'warning' */
+    --danger-color: #dc3545; /* Rojo Bootstrap 'danger' */
+    --info-color: #17a2b8; /* Azul claro Bootstrap 'info' */
+    --text-color: #343a40; /* Texto oscuro de Bootstrap */
+    --background-color: #f8f9fa; /* Fondo claro de Bootstrap */
+    --card-background: #ffffff;
+    --border-color: #dee2e6;
+    --font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}/* style.css para login*/
+body {
+  background: linear-gradient(135deg, #28a745, #dc3545);
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.login-box {
+  background-color: white;
+  padding: 30px;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+.toggle-form {
+  cursor: pointer;
+  color: #007bff;
+  font-weight: 500;
+}
+
+.toggle-form:hover {
+  text-decoration: underline;
+}
+
+@keyframes fadeIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+/*para index---------------------------------------------------------------------------------------*/
+/* General Body and Page Wrapper Styles */
+body {
+    overflow-x: hidden; /* Previene el scroll horizontal no deseado */
+    background-color: #02dede; /* Fondo de la página: un tono muy claro de azul-verde, suave y relajante */
+}
+
+#wrapper {
+    display: flex; /* Utiliza flexbox para el diseño de la barra lateral y el contenido */
+}
+
+/* Sidebar Styles */
+#sidebar-wrapper {
+    min-height: 100vh; /* La sidebar ocupa al menos el 100% de la altura de la ventana */
+    margin-left: -15rem; /* Oculta la sidebar por defecto en pantallas pequeñas */
+    transition: margin .25s ease-out; /* Animación suave al mostrar/ocultar la sidebar */
+    width: 15rem; /* Ancho fijo de la sidebar */
+}
+
+#sidebar-wrapper .sidebar-heading {
+    padding: 0.875rem 1.25rem;
+    font-size: 1.2rem;
+}
+
+#sidebar-wrapper .list-group {
+    width: 15rem; /* Asegura que la lista de elementos ocupe el ancho de la sidebar */
+}
+
+#page-content-wrapper {
+    min-width: 100vw; /* El contenido principal ocupa todo el ancho disponible */
+}
+
+/* Toggle para sidebar (clase añadida por JavaScript para expandir/colapsar) */
+#wrapper.toggled #sidebar-wrapper {
+    margin-left: 0; /* Muestra la sidebar cuando se activa la clase 'toggled' */
+}
+
+/* Navbar Styles */
+.navbar {
+    border-bottom: 1px solid #ed0b0b; /* Borde inferior sutil para la barra de navegación superior */
+}
+
+/* Main Content Area Styling */
+.container-fluid.py-4 {
+    background-color: #023700; /* Mantiene el mismo fondo claro para el área del contenedor principal */
+}
+
+.card {
+    border: none; /* Elimina el borde predeterminado de la tarjeta */
+    border-radius: 10px; /* Esquinas ligeramente redondeadas para la tarjeta principal */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil para dar profundidad */
+    background-color: #d0e1c7; /* Fondo blanco para la tarjeta de contenido principal */
+}
+
+.card-title {
+    color: #176b2a; /* Color verde de éxito de Bootstrap para los títulos */
+}
+
+.lead {
+    color: #000000; /* Texto ligeramente más oscuro para los párrafos destacados */
+}
+
+/* Info Box Styles (para las cajas de información como "Nuestros Objetivos") */
+.info-box {
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Sombra más ligera para las cajas internas */
+}
+
+.info-box ul {
+    list-style: none; /* Elimina los puntos de viñeta predeterminados del navegador */
+    padding-left: 0; /* Elimina el padding izquierdo predeterminado de la lista */
+}
+
+.info-box ul li {
+    margin-bottom: 8px; /* Espacio entre los elementos de la lista */
+    color: #000000; /* Color de texto para los elementos de la lista */
+}
+
+.info-box ul li::before {
+    content: "\2022"; /* Carácter Unicode para un punto de viñeta */
+    color: #000000; /* Viñeta de color verde para combinar con los títulos de éxito */
+    font-weight: bold;
+    display: inline-block;
+    width: 1em;
+    margin-left: -1em; /* Ajusta la posición de la viñeta */
+}
+
+/* Colores de fondo específicos para las cajas de información */
+.bg-light-success {
+    background-color: #aae1aa !important; /* Tono más claro de verde para la caja de éxito */
+    border-color: #289fa7 !important; /* Borde verde para la caja de éxito */
+}
+
+.bg-light-primary {
+    background-color: #9bdea2 !important; /* Tono más claro de azul para la caja primaria */
+    border-color: #00ff04 !important; /* Borde azul para la caja primaria */
+}
+
+/* Estilos para la imagen principal de contenido ("Cómo Empezar") */
+.main-content-image {
+    max-width: 100%; /* Asegura que la imagen sea responsiva dentro de su columna */
+    height: auto; /* Mantiene la relación de aspecto de la imagen */
+    display: block; /* Asegura un espaciado correcto y permite el centrado */
+    margin: 0 auto; /* Centra la imagen horizontalmente */
+    border: 2px solid #014c12; /* Añade un borde sutil que combine con el color primario */
+    border-radius: 8px; /* Redondea las esquinas para que coincida con las cajas de información */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Añade una sombra para darle profundidad */
+}
+
+/* Media Queries para Responsividad (ajustes para diferentes tamaños de pantalla) */
+@media (min-width: 768px) {
+    #sidebar-wrapper {
+        margin-left: 0; /* Muestra la sidebar por defecto en pantallas más grandes */
+    }
+    #page-content-wrapper {
+        min-width: 0; /* Reinicia el ancho mínimo para que el contenido se ajuste */
+        width: 100%; /* El contenido ocupa el 100% del espacio restante */
+    }
+    #wrapper.toggled #sidebar-wrapper {
+        margin-left: -15rem; /* Oculta la sidebar en pantallas grandes si se alterna */
+    }
+}
+/* Ajustar el tamaño del cuerpo para ocupar toda la pantalla */
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+/* Asegurar que el contenido principal ocupe toda la pantalla */
+#wrapper, #page-content-wrapper {
+    width: 100vw;
+    height: 100vh;
+}
+
+/* Evitar márgenes laterales en el contenedor */
+.container-fluid {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+
+/*para el registro----------------------------------------------------------------------------------------------*/
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+#wrapper {
+    display: flex;
+    height: 100vh;
+}
+
+#sidebar-wrapper {
+    width: 400px;
+    min-height: 100vh;
+}
+
+#page-content-wrapper {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.container-fluid {
+    flex-grow: 1;
+}
+
+.card {
+    max-width: 800px;
+    margin: auto;
+}
+/*----------------------------para atenciones-----------------------------------------------------------
+-------------*/
+
+body {
+    font-family: var(--font-family);
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+/* Specific body for login page */
+.login-body {
+    background: linear-gradient(to right, var(--primary-color), #218838); /* Gradiente más atractivo */
+}
+
+.login-card {
+    max-width: 450px;
+    width: 100%;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    animation: fadeIn 0.8s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Sidebar styles */
+#wrapper {
+    overflow-x: hidden;
+}
+
+#sidebar-wrapper {
+    min-height: 100vh;
+    margin-left: -15rem;
+    transition: margin .25s ease-out;
+    width: 15rem;
+}
+
+#sidebar-wrapper .sidebar-heading {
+    padding: 0.875rem 1.25rem;
+    font-size: 1.2rem;
+    color: white;
+}
+
+#sidebar-wrapper .list-group {
+    width: 15rem;
+}
+
+#page-content-wrapper {
+    min-width: 100vw;
+}
+
+#wrapper.toggled #sidebar-wrapper {
+    margin-left: 0;
+}
+
+@media (min-width: 768px) {
+    #sidebar-wrapper {
+        margin-left: 0;
+    }
+
+    #page-content-wrapper {
+        min-width: 0;
+        width: 100%;
+    }
+
+    #wrapper.toggled #sidebar-wrapper {
+        margin-left: -15rem;
+    }
+}
+
+/* Custom list-group-item styles for sidebar */
+.list-group-item.bg-dark {
+    color: rgba(255, 255, 255, 0.7);
+    border: none;
+    border-radius: 0;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.list-group-item.bg-dark:hover {
+    background-color: #343a40; /* Lighter dark */
+    color: white;
+}
+
+.list-group-item.bg-dark.active {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+    font-weight: bold;
+    border-left: 5px solid white; /* Indicador visual de página activa */
+}
+
+/* Card customizations */
+.card {
+    border-radius: 0.75rem;
+    border: none;
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,.08);
+}
+
+.card-title {
+    font-weight: 600;
+}
+
+/* Info boxes on index page */
+.info-box {
+    background-color: var(--card-background);
+    border-radius: 0.75rem;
+    box-shadow: 0 0.2rem 0.5rem rgba(0,0,0,.05);
+}
+
+.bg-light-success {
+    background-color: #e6ffe6 !important; /* Más claro que success */
+    border-color: var(--primary-color) !important;
+}
+
+.bg-light-primary {
+    background-color: #e6f7ff !important; /* Más claro que primary */
+    border-color: var(--secondary-color) !important;
+}
+
+.bg-light-info {
+    background-color: #e0f7fa !important; /* Más claro que info */
+    border-color: var(--info-color) !important;
+}
+
+
+/* Table customizations */
+.table-responsive {
+    border-radius: 0.5rem;
+    overflow: hidden;
+    border: 1px solid var(--border-color); /* Borde alrededor de la tabla */
+}
+
+.table thead.table-success th {
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: bold;
+    padding: 1rem;
+}
+
+.table tbody tr td {
+    padding: 0.75rem 1rem;
+    vertical-align: middle;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #e9ecef;
+}
+
+/* Custom button sizes/colors */
+.btn-lg {
+    padding: 0.8rem 1.5rem;
+    font-size: 1.1rem;
+    border-radius: 0.5rem;
+}
+
+.btn-sm {
+    padding: 0.3rem 0.8rem;
+    font-size: 0.85rem;
+    border-radius: 0.3rem;
+}
+
+.btn-action {
+    margin-right: 0.5rem;
+}
+
+/* Form feedback styling */
+.form-control:focus, .form-select:focus, .form-control:valid, .form-select:valid {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.25); /* Sombra de enfoque verde */
+}
+
+.was-validated .form-control:invalid, .form-control.is-invalid,
+.was-validated .form-select:invalid, .form-select.is-invalid {
+    border-color: var(--danger-color);
+    box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+}
+
+.was-validated .form-control:valid, .form-control.is-valid,
+.was-validated .form-select:valid, .form-select.is-valid {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.25);
+}
+
+
+/* Historial page specifics */
+#pacienteInfo {
+    border: 1px solid var(--info-color) !important;
+}
+#pacienteInfo h4 {
+    color: var(--secondary-color) !important;
+}
+#historialAtenciones h4 {
+    color: var(--primary-color) !important;
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 768px) {
+    .sidebar-heading {
+        font-size: 1rem !important;
+    }
+    .list-group-item {
+        font-size: 0.9rem;
+        padding: 10px 15px !important;
+    }
+    .btn-lg {
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+    }
+    .card {
+        padding: 15px !important;
+    }
+    .card-title {
+        font-size: 1.5rem;
+    }
+}
+/*------------------------------------------------------------------------------------------------------------*/
