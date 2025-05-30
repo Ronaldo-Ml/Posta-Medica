@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Pacientes Frecuentes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="d-flex" id="wrapper">
+        <div class="bg-dark border-end" id="sidebar-wrapper">
+            <div class="sidebar-heading bg-success text-white py-4 text-center fw-bold fs-5">
+                <img src="https://via.placeholder.com/60" alt="Logo" class="img-fluid rounded-circle mb-2 border border-white">
+                Posta Médica
+            </div>
+            <div class="list-group list-group-flush">
+                <a href="index.html" class="list-group-item list-group-item-action bg-dark text-white p-3"><i class="bi bi-house-door-fill me-2"></i> Inicio</a>
+                <a href="registro.html" class="list-group-item list-group-item-action bg-dark text-white p-3"><i class="bi bi-person-plus-fill me-2"></i> Registrar Atención</a>
+                <a href="atenciones.html" class="list-group-item list-group-item-action bg-dark text-white p-3"><i class="bi bi-clipboard-data-fill me-2"></i> Ver Atenciones</a>
+                <a href="pacientes.html" class="list-group-item list-group-item-action bg-dark text-white p-3 active"><i class="bi bi-people-fill me-2"></i> Gestión de Pacientes</a>
+                <a href="historial.html" class="list-group-item list-group-item-action bg-dark text-white p-3"><i class="bi bi-journal-medical me-2"></i> Historial por Paciente</a>
+                <a href="reportes.html" class="list-group-item list-group-item-action bg-dark text-white p-3"><i class="bi bi-graph-up-arrow me-2"></i> Reportes</a>
+                <a href="#" id="logoutBtn" class="list-group-item list-group-item-action bg-dark text-white p-3 text-danger"><i class="bi bi-box-arrow-right me-2"></i> Cerrar Sesión</a>
+            </div>
+        </div>
+        <div id="page-content-wrapper">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+                <div class="container-fluid">
+                    <button class="btn btn-primary" id="sidebarToggle"><i class="bi bi-list"></i> Menú</button>
+                    <h5 class="mb-0 ms-3 text-success">Gestión de Pacientes</h5>
+                </div>
+            </nav>
+
+            <div class="container-fluid py-4">
+                <div class="card shadow-sm p-4 mb-4">
+                    <h2 class="card-title text-success mb-4"><i class="bi bi-person-badge-fill me-2"></i> Registrar/Editar Paciente</h2>
+                    <form id="pacienteForm" class="needs-validation" novalidate>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="nombrePacienteF" class="form-label">Nombre:</label>
+                                <input type="text" class="form-control" id="nombrePacienteF" required>
+                                <div class="invalid-feedback">
+                                    Por favor, ingrese el nombre del paciente.
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="dniPacienteF" class="form-label">DNI:</label>
+                                <input type="text" class="form-control" id="dniPacienteF" pattern="[0-9]{8}" maxlength="8" required>
+                                <div class="invalid-feedback">
+                                    El DNI debe tener 8 dígitos numéricos.
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="edadPacienteF" class="form-label">Edad:</label>
+                                <input type="number" class="form-control" id="edadPacienteF" min="0" required>
+                                <div class="invalid-feedback">
+                                    La edad debe ser un número positivo.
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-success btn-lg"><i class="bi bi-save me-2"></i> Guardar Paciente</button>
+                    </form>
+                </div>
+
+                <div class="card shadow-sm p-4">
+                    <h2 class="card-title text-success mb-4"><i class="bi bi-people-fill me-2"></i> Listado de Pacientes</h2>
+                    <div class="mb-3">
+                        <input type="text" class="form-control" id="filtroPacientes" placeholder="Buscar paciente por nombre o DNI...">
+                
+                       
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped">
+                            <thead class="table-success">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Nombre</th>
+                                    <th>DNI</th>
+                                    <th>Edad</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="listaPacientes">
+                                <tr><td colspan="5" class="text-center text-muted">Cargando pacientes...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+
+    <script >
+document.addEventListener("DOMContentLoaded", function () {
+    let listaPacientes = document.getElementById("listaPacientes");
+    let pacienteForm = document.getElementById("pacienteForm");
+    let filtroPacientes = document.getElementById("filtroPacientes");
+    let nombrePacienteInput = document.getElementById("nombrePacienteF");
+    let dniPacienteInput = document.getElementById("dniPacienteF");
+    let edadPacienteInput = document.getElementById("edadPacienteF");
+    let guardarPacienteBtn = pacienteForm.querySelector('button[type="submit"]');
+
+    // Function to load and display patients
+    function cargarPacientes() {
+        let pacientes = JSON.parse(localStorage.getItem("pacientes")) || [];
+        listaPacientes.innerHTML = pacientes.length === 0 ?
+            "<tr><td colspan='5' class='text-center text-muted'>No hay pacientes registrados.</td></tr>" : "";
+
+        pacientes.forEach((paciente, index) => {
+            let fila = document.createElement("tr");
+            fila.setAttribute("data-nombre", paciente.nombre.toLowerCase());
+            fila.setAttribute("data-dni", paciente.dni);
+
+            fila.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${paciente.nombre}</td>
+                <td>${paciente.dni}</td>
+                <td>${paciente.edad}</td>
+                <td>
+                    <button class="btn btn-warning btn-sm editarPaciente" data-id="${paciente.id}"><i class="bi bi-pencil-square"></i> Editar</button>
+                    <button class="btn btn-danger btn-sm eliminarPaciente" data-id="${paciente.id}"><i class="bi bi-trash"></i> Eliminar</button>
+                </td>
+            `;
+            listaPacientes.appendChild(fila);
+        });
+    }
+
+    // Load patients on page load
+    cargarPacientes();
+
+    // Real-time input validation
+    function validarCampo(elemento, regex, mensajeError) {
+        if (regex.test(elemento.value.trim())) {
+            elemento.classList.remove("is-invalid");
+            elemento.classList.add("is-valid");
+        } else {
+            elemento.classList.remove("is-valid");
+            elemento.classList.add("is-invalid");
+            if (elemento.nextElementSibling) { // Ensure there's a next sibling (feedback div)
+                elemento.nextElementSibling.textContent = mensajeError;
+            }
+        }
+    }
+
+    nombrePacienteInput.addEventListener("input", function () {
+        let nombreRegex = /^[A-Za-zÁÉÍÓÚÑáéíóúñ\s]+$/; // Allows spaces for multiple words
+        validarCampo(this, nombreRegex, "Debe contener solo letras y al menos dos palabras.");
+        // Additional check for at least two words
+        if (this.value.trim().split(/\s+/).length < 2 && this.value.trim() !== "") {
+            this.classList.remove("is-valid");
+            this.classList.add("is-invalid");
+            if (this.nextElementSibling) {
+                this.nextElementSibling.textContent = "Por favor, ingrese al menos dos palabras.";
+            }
+        }
+    });
+
+
+    dniPacienteInput.addEventListener("input", function () {
+        let dniRegex = /^\d{8}$/;
+        validarCampo(this, dniRegex, "Debe contener exactamente 8 dígitos numéricos.");
+    });
+
+    edadPacienteInput.addEventListener("input", function () {
+        let edad = parseInt(this.value);
+        if (edad >= 1 && edad <= 120) {
+            this.classList.remove("is-invalid");
+            this.classList.add("is-valid");
+        } else {
+            this.classList.remove("is-valid");
+            this.classList.add("is-invalid");
+        }
+    });
+
+    // Handle form submission (add/edit patient)
+    pacienteForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        // Manual validation before proceeding
+        let formIsValid = true;
+
+        if (!nombrePacienteInput.value.trim().match(/^[A-Za-zÁÉÍÓÚÑáéíóúñ\s]+$/) || nombrePacienteInput.value.trim().split(/\s+/).length < 2) {
+            nombrePacienteInput.classList.add("is-invalid");
+            formIsValid = false;
+        } else {
+            nombrePacienteInput.classList.remove("is-invalid");
+            nombrePacienteInput.classList.add("is-valid");
+        }
+
+        if (!dniPacienteInput.value.trim().match(/^\d{8}$/)) {
+            dniPacienteInput.classList.add("is-invalid");
+            formIsValid = false;
+        } else {
+            dniPacienteInput.classList.remove("is-invalid");
+            dniPacienteInput.classList.add("is-valid");
+        }
+
+        let edad = parseInt(edadPacienteInput.value.trim());
+        if (isNaN(edad) || edad < 1 || edad > 120) {
+            edadPacienteInput.classList.add("is-invalid");
+            formIsValid = false;
+        } else {
+            edadPacienteInput.classList.remove("is-invalid");
+            edadPacienteInput.classList.add("is-valid");
+        }
+
+        if (!formIsValid) {
+            alert("Por favor, corrija los errores en el formulario.");
+            return;
+        }
+
+        let nombre = nombrePacienteInput.value.trim();
+        let dni = dniPacienteInput.value.trim();
+        let currentEdad = edadPacienteInput.value.trim();
+        let pacientes = JSON.parse(localStorage.getItem("pacientes")) || [];
+        let editId = pacienteForm.getAttribute("data-edit-id");
+
+        if (editId) {
+            // Editing existing patient
+            let pacienteIndex = pacientes.findIndex(p => p.id == editId);
+            if (pacienteIndex !== -1) {
+                // Check if DNI is being changed to an existing DNI (excluding itself)
+                const dniConflict = pacientes.some((p, i) => p.dni === dni && i !== pacienteIndex);
+                if (dniConflict) {
+                    dniPacienteInput.classList.add("is-invalid");
+                    alert("El DNI ingresado ya está registrado para otro paciente.");
+                    return;
+                }
+
+                pacientes[pacienteIndex].nombre = nombre;
+                pacientes[pacienteIndex].dni = dni;
+                pacientes[pacienteIndex].edad = currentEdad;
+
+                localStorage.setItem("pacientes", JSON.stringify(pacientes));
+                alert("Paciente actualizado correctamente.");
+                pacienteForm.removeAttribute("data-edit-id"); // Clear edit mode
+                guardarPacienteBtn.innerHTML = '<i class="bi bi-save me-2"></i> Guardar Paciente'; // Reset button text
+                cargarPacientes();
+                pacienteForm.reset();
+                nombrePacienteInput.classList.remove("is-valid", "is-invalid");
+                dniPacienteInput.classList.remove("is-valid", "is-invalid");
+                edadPacienteInput.classList.remove("is-valid", "is-invalid");
+            }
+        } else {
+            // Registering new patient
+            let dniExistente = pacientes.some(paciente => paciente.dni === dni);
+            if (dniExistente) {
+                dniPacienteInput.classList.add("is-invalid");
+                alert("El DNI ingresado ya está registrado en el sistema.");
+                return;
+            }
+
+            let nuevoPaciente = { id: Date.now(), nombre, dni, edad: currentEdad };
+            pacientes.push(nuevoPaciente);
+            localStorage.setItem("pacientes", JSON.stringify(pacientes));
+
+            alert("Paciente registrado correctamente.");
+            cargarPacientes();
+            pacienteForm.reset();
+            nombrePacienteInput.classList.remove("is-valid", "is-invalid");
+            dniPacienteInput.classList.remove("is-valid", "is-invalid");
+            edadPacienteInput.classList.remove("is-valid", "is-invalid");
+        }
+    });
+
+    // Filter patients in real-time
+    filtroPacientes.addEventListener("input", function () {
+        let criterio = this.value.trim().toLowerCase();
+        let filas = listaPacientes.getElementsByTagName("tr");
+
+        let encontrados = 0; // Use a counter to track found patients
+
+        for (let fila of filas) {
+            let nombre = fila.getAttribute("data-nombre");
+            let dni = fila.getAttribute("data-dni");
+
+            if (nombre && dni) { // Ensure attributes exist
+                if (nombre.includes(criterio) || dni.includes(criterio)) {
+                    fila.style.display = "";
+                    encontrados++;
+                } else {
+                    fila.style.display = "none";
+                }
+            }
+        }
+        // If nothing found and filter is not empty, display message. Otherwise, reload all.
+        if (encontrados === 0 && criterio !== "") {
+            listaPacientes.innerHTML = "<tr><td colspan='5' class='text-center text-muted'>No se encontró ningún paciente.</td></tr>";
+        } else if (criterio === "") {
+            // If filter is cleared, reload all patients to show the original list
+            cargarPacientes();
+        }
+    });
+
+    // Event delegation for Edit and Delete buttons
+    document.addEventListener("click", function (event) {
+        if (event.target.closest(".editarPaciente")) {
+            let id = event.target.closest(".editarPaciente").getAttribute("data-id");
+            let pacientes = JSON.parse(localStorage.getItem("pacientes")) || [];
+            let paciente = pacientes.find(p => p.id == id);
+
+            if (paciente) {
+                nombrePacienteInput.value = paciente.nombre;
+                dniPacienteInput.value = paciente.dni;
+                edadPacienteInput.value = paciente.edad;
+
+                // Set data-edit-id to indicate editing mode
+                pacienteForm.setAttribute("data-edit-id", paciente.id);
+                guardarPacienteBtn.innerHTML = '<i class="bi bi-arrow-repeat me-2"></i> Actualizar Paciente'; // Change button text
+
+                // Clear validation styles when loading for edit
+                nombrePacienteInput.classList.remove("is-valid", "is-invalid");
+                dniPacienteInput.classList.remove("is-valid", "is-invalid");
+                edadPacienteInput.classList.remove("is-valid", "is-invalid");
+
+                alert("Ahora puedes editar los datos del paciente en el formulario y luego haz clic en 'Actualizar Paciente'.");
+            }
+        } else if (event.target.closest(".eliminarPaciente")) {
+            let id = event.target.closest(".eliminarPaciente").getAttribute("data-id");
+            if (confirm("¿Seguro que desea eliminar este paciente? Esta acción no se puede deshacer.")) {
+                let pacientes = JSON.parse(localStorage.getItem("pacientes")) || [];
+                let nuevasPacientes = pacientes.filter(p => p.id != id);
+                localStorage.setItem("pacientes", JSON.stringify(nuevasPacientes));
+                cargarPacientes();
+                // If in edit mode for a deleted patient, clear the form and reset button
+                if (pacienteForm.getAttribute("data-edit-id") == id) {
+                    pacienteForm.removeAttribute("data-edit-id");
+                    pacienteForm.reset();
+                    guardarPacienteBtn.innerHTML = '<i class="bi bi-save me-2"></i> Guardar Paciente';
+                    nombrePacienteInput.classList.remove("is-valid", "is-invalid");
+                    dniPacienteInput.classList.remove("is-valid", "is-invalid");
+                    edadPacienteInput.classList.remove("is-valid", "is-invalid");
+                }
+                alert("Paciente eliminado correctamente.");
+            }
+        }
+    });
+
+    // Sidebar Toggle
+    document.getElementById("sidebarToggle").addEventListener("click", function () {
+        document.getElementById("wrapper").classList.toggle("toggled");
+    });
+
+    // Logout Button
+    document.getElementById("logoutBtn").addEventListener("click", function (event) {
+        event.preventDefault();
+        if (confirm("¿Estás seguro de que quieres cerrar sesión?")) {
+            // Implement your logout logic here, e.g., redirect to login page
+            alert("Sesión cerrada.");
+            // window.location.href = "login.html"; // Example redirect
+        }
+    });
+});
+    </script>
+</body>
+</html>
